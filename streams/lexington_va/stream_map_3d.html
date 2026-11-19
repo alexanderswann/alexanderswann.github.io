@@ -648,7 +648,7 @@
       if (!f) return;
       const p = f.properties, id = f.layer.id;
       // drop and gauge popups are HTML built by 06_map.py from our own data
-      const html = id === "streams" ? streamPop(p) : (id.startsWith("drop") || id === "gauges" || id === "trout" || id === "lakes") ? p.html
+      const html = id === "streams" ? streamPop(p) : (id.startsWith("drop") || id === "gauges" || id === "trout" || id === "lakes" || (id === "falls" && p.html)) ? p.html
         : tipHtml(id, p) + (p.u && id.startsWith("poi") ? `<br><a href="${esc(p.u)}" target="_blank">Forest Service page ↗</a>` : "");
       tip.remove();
       new maplibregl.Popup({maxWidth: "340px"}).setLngLat(e.lngLat).setHTML(html).addTo(map);
