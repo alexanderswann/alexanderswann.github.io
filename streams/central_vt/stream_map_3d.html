@@ -644,8 +644,10 @@
     map.on("mousemove", e => { if (!pending) requestAnimationFrame(onMove); pending = e; });
     map.getCanvas().addEventListener("mouseleave", () => { tip.remove(); setHover(null); });
     map.on("click", e => {
-      const f = map.queryRenderedFeatures([[e.point.x - 4, e.point.y - 4], [e.point.x + 4, e.point.y + 4]], {layers: hoverIds})[0];
+      let f = map.queryRenderedFeatures([[e.point.x - 4, e.point.y - 4], [e.point.x + 4, e.point.y + 4]], {layers: hoverIds})[0];
       if (!f) return;
+      // a depth contour opens its lake's popup when the lakes are shown: over a deep lake the lines cover much of it
+      if (f.layer.id === "lake-depth") f = map.queryRenderedFeatures(e.point, {layers: ["lakes"]})[0] || f;
       const p = f.properties, id = f.layer.id;
       // drop and gauge popups are HTML built by 06_map.py from our own data
       const html = id === "streams" ? streamPop(p) : (id.startsWith("drop") || id === "gauges" || id === "trout" || id === "lakes" || (id === "falls" && p.html)) ? p.html
